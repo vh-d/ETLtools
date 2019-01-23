@@ -219,6 +219,8 @@ etl_read <- function(
 #' @param name character;target name
 #' @param schema character;
 #' @param ... arguments passed to write/load function
+#' @details
+#' odbc32: row.names = FALSE by default
 #'
 #' @export
 etl_write <- function(
@@ -247,11 +249,16 @@ etl_write <- function(
 
     do.call(
       odbc32::sqlSave,
-      args = c(list(
-        con  = to,
-        name = tab,
-        data = x),
-        ...))
+      args = union.list(
+        list(
+          con  = to,
+          name = tab,
+          data = x,
+          rownames = FALSE
+        ),
+        list(...)
+      )
+    )
 
   } else if (is(to, "environment")) {
     setDT(x)
